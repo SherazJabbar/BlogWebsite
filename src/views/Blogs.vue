@@ -22,9 +22,12 @@ export default {
   components: {
     BlogCards,
   },
+  created() {
+    console.log(this.$store.state.blogPosts);
+  },
   computed: {
     sampleBlogCards() {
-      return this.$store.state.sampleBlogCards;
+      return this.$store.state.blogPosts;
     },
     editPost: {
       get() {

@@ -1,6 +1,6 @@
 <template>
   <div class="app-wrapper">
-    <div class="app">
+    <div class="app" v-if="this.$store.state.postLoaded">
       <Navigation v-show="!navigation" />
       <router-view />
       <Footer v-show="!navigation" />
@@ -11,6 +11,9 @@
 <script>
 import Navigation from "./components/Navigation.vue";
 import Footer from "./components/Footer.vue";
+// eslint-disable-next-line no-unused-vars
+import firebase from "firebase/app";
+import "firebase/auth";
 
 export default {
   name: "app",
@@ -24,10 +27,16 @@ export default {
     };
   },
   created() {
+    firebase.auth().onAuthStateChanged((user) => {
+      this.$store.commit("updateUser", user);
+      if (user) {
+        this.$store.dispatch("getCurrentUser");
+      }
+    });
     this.checkRoute();
+    this.$store.dispatch("getPost");
   },
 
-  mounted() {},
   methods: {
     checkRoute() {
       if (
@@ -139,6 +148,12 @@ button,
   pointer-events: none !important;
   cursor: none !important;
   background-color: rgba(128, 128, 128, 0.5) !important;
+}
+
+.error {
+  text-align: center;
+  font-size: 12px;
+  color: red;
 }
 
 .blog-card-wrap {

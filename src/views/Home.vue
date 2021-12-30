@@ -1,9 +1,9 @@
 <template>
   <div class="home">
-    <BlogPost :post="welcomeScreen" />
+    <BlogPost v-if="!user" :post="welcomeScreen" />
     <BlogPost
       :post="post"
-      v-for="(post, index) in sampleBlogPost"
+      v-for="(post, index) in blogPostsFeed"
       :key="index"
     />
     <div class="blog-card-wrap">
@@ -12,13 +12,13 @@
         <div class="blog-cards">
           <BlogCards
             :post="post"
-            v-for="(post, index) in sampleBlogCards"
+            v-for="(post, index) in blogPostsCards"
             :key="index"
           />
         </div>
       </div>
     </div>
-    <div class="updates">
+    <div v-if="!user" class="updates">
       <div class="container">
         <h2>Never miss a post. Register for your free account today</h2>
         <router-link class="router-button" to="#"
@@ -65,8 +65,16 @@ export default {
     Arrow,
   },
   computed: {
-    sampleBlogCards() {
-      return this.$store.state.sampleBlogCards;
+    blogPostsCards() {
+      return this.$store.getters.blogPostsCards;
+    },
+
+    blogPostsFeed() {
+      return this.$store.getters.blogPostsFeed;
+    },
+
+    user() {
+      return this.$store.state.user;
     },
   },
 };

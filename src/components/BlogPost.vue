@@ -1,15 +1,18 @@
 <template>
-  <div class="blog-wrapper no-user">
+  <div class="blog-wrapper" :class="{ 'no-user': !user }">
     <div class="blog-content">
       <div>
         <h2 v-if="post.welcomeScreen">{{ post.title }}</h2>
-        <h2 v-else>{{ post.title }}</h2>
+        <h2 v-else>{{ post.blogTitle }}</h2>
         <p v-if="post.welcomeScreen">{{ post.blogPost }}</p>
-        <p class="content-preview" v-else>{{ post.blogHTML }}</p>
+        <p class="content-preview" v-else v-html="post.blogHTML"></p>
         <router-link class="link" v-if="post.welcomeScreen" to="#"
           >Login/Register <Arrow class="arrow arrow-light"
         /></router-link>
-        <router-link v-else class="link " to="#"
+        <router-link
+          v-else
+          class="link "
+          :to="{ name: 'ViewBlog', params: { blogid: this.post.blogId } }"
           >View The Post <Arrow class="arrow"
         /></router-link>
       </div>
@@ -20,11 +23,7 @@
         :src="require(`../assets/blogPhotos/${post.photo}.jpg`)"
         alt=""
       />
-      <img
-        v-else
-        :src="require(`../assets/blogPhotos/${post.blogCoverPhoto}.jpg`)"
-        alt=""
-      />
+      <img v-else :src="post.blogCoverPhoto" alt="" />
     </div>
   </div>
 </template>
@@ -39,6 +38,11 @@ export default {
   },
   components: {
     Arrow,
+  },
+  computed: {
+    user() {
+      return this.$store.state.user;
+    },
   },
 };
 </script>
